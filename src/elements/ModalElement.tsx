@@ -5,7 +5,7 @@ import LoadingOutlined from '@ant-design/icons/LoadingOutlined'
 import { useTask } from '@/context/TaskProvider'
 
 interface ModalProps {
-    onAction: () => void
+    onAction?: () => void | undefined
     onClose: () => void
     isOpen: boolean
     children: React.ReactNode
@@ -42,6 +42,9 @@ const ModalElement = ({ isOpen, onClose, onAction, children }: ModalProps) => {
                     >
                         Close
                     </Button>
+                    {
+                    onAction 
+                    && 
                     <Button
                         transition='ease-in 0.5s'
                         colorScheme='gray'
@@ -52,6 +55,7 @@ const ModalElement = ({ isOpen, onClose, onAction, children }: ModalProps) => {
                         : "Save"
                         }
                     </Button>
+                    }
                 </ModalFooter>
             </ModalContent>
         </Modal>
