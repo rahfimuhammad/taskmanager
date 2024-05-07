@@ -3,6 +3,7 @@ import { formatDate } from '../hooks/useFormatdate'
 import EditFilled  from '@ant-design/icons/EditFilled';
 import DeleteFilled  from '@ant-design/icons/DeleteFilled';
 import React from 'react'
+import { useTask } from '@/context/TaskProvider';
 
 interface CardProps {
     onOpen: () => void;
@@ -10,6 +11,10 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ onOpen, task }) => {
+
+    const { deleteTask } = useTask()
+        
+
     return (
 
         <Box
@@ -64,8 +69,20 @@ const Card: React.FC<CardProps> = ({ onOpen, task }) => {
                         gap={4}
                         alignItems='center'
                     >
-                        <EditFilled onClick={onOpen} style={{ cursor: 'pointer', color: '#b8bcc4', fontSize: '24px' }}/>
-                        <DeleteFilled style={{ cursor: 'pointer', color: '#b8bcc4', fontSize: '24px' }}/>
+                        <EditFilled 
+                                onClick={onOpen} 
+                                style={{ 
+                                        cursor: 'pointer', 
+                                        color: '#b8bcc4', 
+                                        fontSize: '24px' }}
+                        />
+                        <DeleteFilled 
+                                onClick={() => deleteTask(task.id)} 
+                                style={{ 
+                                        cursor: 'pointer', 
+                                        color: '#b8bcc4', 
+                                        fontSize: '24px' }}
+                        />
                     </Box>
                 </Box>
             </Box>

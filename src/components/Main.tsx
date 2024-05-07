@@ -6,6 +6,7 @@ import Form from '@/elements/Form'
 import PlusCircleOutlined from '@ant-design/icons/PlusCircleOutlined'
 import PlusOutlined from '@ant-design/icons/PlusOutlined'
 import { useTask } from '@/context/TaskProvider'
+import Loading from '@/elements/Loading'
 
 interface DataItem {
     id: string
@@ -21,7 +22,7 @@ const Main = () => {
     const isSmall = IsSmallScreen()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [taskData, setTaskData] = useState<any>({});
-    const { task, getTasks } = useTask()
+    const { task, getTasks, loading } = useTask()
 
     useEffect(() => {
         getTasks()
@@ -43,7 +44,8 @@ const Main = () => {
     }
     
     return (
-        <Box 
+        <Box
+            position={isSmall ? 'static' : 'relative'} 
             h='100vh'
             w={isSmall ? '100%' : 'calc(100% - 260px)'}
             display='flex'
@@ -56,7 +58,7 @@ const Main = () => {
         >
             <Box
                 position='absolute'
-                right='20px'
+                right={isSmall ? '20px' : '30px'}
                 top='20px'
                 w='40px'
                 h='40px'
@@ -86,6 +88,7 @@ const Main = () => {
                 <h1>All Tasks</h1>
                 <hr style={{width: "60px", border: "2px solid #eef2f6"}}/>
             </Box>
+            {loading && <Loading/>}
             <Box
                 w='100%'
                 display='grid'

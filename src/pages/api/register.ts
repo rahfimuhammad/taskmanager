@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/libs/prisma";
 
-type User = {
+type Data = {
     username: string;
     email: string;
-    avatar: string;
+    avatar: string | null;
     password: string;
 };
 
@@ -14,17 +14,16 @@ type ErrorResponse = {
 
 export  default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<User[] | User | ErrorResponse>,
+    res: NextApiResponse<Data[] | Data | ErrorResponse>,
 ) {
     if (req.method === "POST") {
-    const { username, email, avatar, password } = req.body;
+    const { username, email, password } = req.body;
 
         try {
             const newUser = await prisma.users.create({
                 data: {
                     username,
                     email,
-                    avatar,
                     password,
                     },
             });

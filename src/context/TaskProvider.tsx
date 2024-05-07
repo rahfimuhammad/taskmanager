@@ -8,6 +8,7 @@ interface TaskContextType {
     getTasks: () => void
     createTask: (data: any) => void
     updateTask: (data: any) => void
+    deleteTask: (taskId: any) => void
     children?: React.ReactNode
 }
 
@@ -28,13 +29,19 @@ const TaskProvider: React.FC<TaskContextType> = ({ children }) => {
     const toast = useToast()
 
     const getTasks = () => {
-        
-        fetch('/api/tasks?userId=ee9eee7c-d084-4dda-910c-34cd6661711a')
-        .then((res) => res.json())
-        .then((data) => 
-            setTask(data),
-        )
-        .catch((error) => console.log(error))
+
+        try {
+            setLoading(true)
+            fetch('/api/tasks?userId=ee9eee7c-d084-4dda-910c-34cd6661711a')
+                .then((res) => res.json())
+                .then((data) => 
+                    setTask(data),
+                )
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const createTask = async (data: any) => {
@@ -108,13 +115,44 @@ const TaskProvider: React.FC<TaskContextType> = ({ children }) => {
         }
     }
 
+    const deleteTask = async (taskId: string) => {
+        try {
+            setLoading(true)
+            const response = await fetch(`/api/tasks?id=${taskId}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                toast({
+                    position: 'top',
+                    title: 'Task deleted successfully',
+                    status: 'success',
+                    duration: 3000,
+                    isClosable: true,
+                });
+            } else {
+                toast({
+                    position: 'top',
+                    title: 'Failed to delete task',
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true,})
+            }
+            getTasks()
+        } catch (error) {
+            console.log('Error occurred while posting data:', error);
+        } finally {
+            setLoading(false)
+        }        
+    }
+
     const value: TaskContextType = {
         task,
         setTask,
         loading,
         getTasks,
         createTask,
-        updateTask
+        updateTask,
+        deleteTask
     };
 
     return (

@@ -143,6 +143,21 @@ export default async function handler(
             res.status(500).json({ message: "Internal server error" });
         }
     
+    } else if (req.method === "DELETE") {
+        const id = req.query.id as string;
+
+        try {
+        const deletedTask = await prisma.tasks.delete({
+            where: {
+                id,
+            },
+        });
+
+            res.status(200).json(deletedTask);
+        } catch (error) {
+            console.error("Error deleting task:", error);
+            res.status(500).json({ message: "Internal server error" });
+        }
     } else {
         res.setHeader("Allow", ["GET", "POST", "PATCH"]);
         res.status(405).json({ message: `Method ${req.method} Not Allowed` });

@@ -107,7 +107,6 @@ a {
 }
 
 .container {
-  /* background-color: #131313; */
   width: 100%;
   height: auto;
   display: flex;
@@ -119,28 +118,27 @@ a {
   user-select: none;}
 
 .display-area {
-  width: 100%;
-  margin: 10px 0;
+  width: 335px;
+  margin: 5px 0;
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: repeat(2, minmax(40px, auto));
   word-wrap: break-word;
-  padding-bottom: 10px;
+  padding-bottom: 15px;
   border-bottom: 1px rgba(128, 128,128, 0.116) solid; }
 
 .currentInput {
   text-align: right;
-  height: 30px;
+  height: fit-content;
   color: white;
-  font-size: xx-large;
-  line-height: 2;
+  font-weight: bold;
+  font-size: larger;
   word-wrap: break-word;}
 
 .answerScreen {
   text-align: right;
   color: rgba(150, 150, 150, 0.87);
-  height: 7px;
-  line-height: 3;
+  height: fit-content;
   font-size: larger;}
 
 .keypad-buttons {
@@ -153,33 +151,38 @@ a {
 .keypad-buttons div {
   width: 100%;}
 
-button {
-  width: 60px;
-  height: 60px;
+.fun-btn, .num-btn {
+  width: 80px;
+  height: 40px;
   outline: none;
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: #474b6b;
   color: #fff;
   font-size: x-large;}
 
 .fun-btn {
   color: #000;
-  background: #ffc652;
+  background: #EDF2F7;
   font-weight: bold;}
 
 .num-btn {
-  background-color: #131313;
-}
+  background-color: #131313;}
 
 .num-btn:hover {
   background-color: #282a3a;}
 
 .fun-btn:hover {
-  background-color: #ffab00;}
+  background-color: #EDF2F7;}
 
 @media only screen and (max-width: 600px) {
   body {
       background-color: #131313;
       align-items: flex-start;}
+
+    .num-btn:hover {
+      background-color: #131313;}
+
+    .fun-btn:hover {
+      background-color: #ffc652;}
 }

@@ -9,9 +9,10 @@ interface ModalProps {
     onClose: () => void
     isOpen: boolean
     children: React.ReactNode
+    title: string
 }
 
-const ModalElement = ({ isOpen, onClose, onAction, children }: ModalProps) => {
+const ModalElement = ({ isOpen, onClose, onAction, children, title }: ModalProps) => {
 
     const { loading } = useTask()
 
@@ -19,16 +20,16 @@ const ModalElement = ({ isOpen, onClose, onAction, children }: ModalProps) => {
         <Modal 
             isOpen={isOpen} 
             onClose={onClose}
-            size= {{base: "sm", sm: "sm", md: "md"}}  
         >
             <ModalOverlay />
             <ModalContent 
                     bg='#242424'
+                    w={{base: "95%", sm: "95%", md: "500px"}}
             >
                 <ModalHeader
                     color='white'
                 >
-                    Edit Task
+                    {title}
                 </ModalHeader>
                 <ModalCloseButton color='white' />
                 <ModalBody> 

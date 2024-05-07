@@ -79,6 +79,7 @@ const Form: React.FC<FormProps> = ({ task, onClose, isOpen }) => {
                 isOpen={isOpen} 
                 onClose={onClose}
                 onAction={handleSubmit}
+                title={task.id ? 'Edit Task' : 'Create Task'}
         >
             <FormControl
                 display='flex'
@@ -113,7 +114,7 @@ const Form: React.FC<FormProps> = ({ task, onClose, isOpen }) => {
                     onChange={handleChange}
                     defaultValue={task.createdAt} 
                     w='fit-content' 
-                    type='date'
+                    type='datetime-local'
                     border='none'
                     bg='#000000'
                     placeholder='Date'
