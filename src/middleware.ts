@@ -1,15 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import authorization from "./middlewares/authorization";
 
-export function middleware(req: NextRequest) {
-    const isLogin = true
-    if(isLogin) {
-        return NextResponse.next();
-    } else {
-        return NextResponse.redirect(new URL("/auth/login", req.url));
-    }
+export function mainMiddleware(req: NextRequest) {
+    const res = NextResponse.next();
+    return res
 }
 
-export const config = {
-    matcher: "/",
-}
+export default authorization(mainMiddleware, ['/'])

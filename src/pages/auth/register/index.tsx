@@ -5,12 +5,13 @@ import { Box, Button, FormControl, Input, Text } from '@chakra-ui/react'
 import React from 'react'
 import { useRouter } from 'next/router';
 import { useAuth } from '@/context/AuthProvider';
+import LoadingOutlined from '@ant-design/icons/LoadingOutlined';
 
 const Register = () => {
 
   const IsSmall = IsSmallScreen()
   const router  = useRouter()
-  const { register } = useAuth()
+  const { register, authLoading } = useAuth()
   const [user, setUser] = React.useState({ 
     username: '', 
     email: '', 
@@ -120,7 +121,7 @@ const Register = () => {
                   mt='10px'
                   onClick={handleSubmit}
               >
-                Login
+                {authLoading ? <LoadingOutlined /> : 'Register' }
               </Button>
             </FormControl>
             <Box>

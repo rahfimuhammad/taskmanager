@@ -1,9 +1,12 @@
 import React, { createContext, useContext } from 'react';
 import { useToast } from '@chakra-ui/react';
+import { useSession } from 'next-auth/react';
 
 interface TaskContextType {
     task: any;
     setTask: React.Dispatch<React.SetStateAction<any>>;
+    filter: string | ''
+    setFilter: React.Dispatch<React.SetStateAction<string>>
     loading: boolean;
     getTasks: () => void
     createTask: (data: any) => void
@@ -26,13 +29,17 @@ const TaskProvider: React.FC<TaskContextType> = ({ children }) => {
 
     const [task, setTask] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
+    const [filter, setFilter] = React.useState('');
     const toast = useToast()
+    const { data }: any = useSession()
+    const userId = data?.user?.id
 
     const getTasks = () => {
 
         try {
             setLoading(true)
-            fetch('/api/tasks?userId=ee9eee7c-d084-4dda-910c-34cd6661711a')
+            console.log('test', data)
+            fetch(`/api/tasks?userId=${userId}&filter=${filter}`)
                 .then((res) => res.json())
                 .then((data) => 
                     setTask(data),
@@ -152,7 +159,9 @@ const TaskProvider: React.FC<TaskContextType> = ({ children }) => {
         getTasks,
         createTask,
         updateTask,
-        deleteTask
+        deleteTask,
+        setFilter,
+        filter
     };
 
     return (

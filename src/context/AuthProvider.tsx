@@ -1,7 +1,10 @@
+import { useToast } from '@chakra-ui/react';
 import React, { createContext, useContext } from 'react';
+import { useRouter } from 'next/router';
 
 interface AuthContextType {
     session: any;
+    authLoading: boolean;
     setSession: React.Dispatch<React.SetStateAction<any>>;
     register: (data: any) => void
     login: (data: any) => void
@@ -21,11 +24,19 @@ export const useAuth = () => {
 const AuthProvider: React.FC<AuthContextType> = ({ children }) => {
 
     const [session, setSession] =  React.useState([]);
+    const [authLoading, setAuthLoading] = React.useState(false);
+    const toast = useToast()
+    const router  = useRouter()
+
+    const handleRouter = () => {
+        router.push('/auth/login')
+      }
 
     const register = async (data: any) => {
 
         try {
-            const response = await fetch('/api/register', {
+            setAuthLoading(true);
+            const response = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -33,12 +44,28 @@ const AuthProvider: React.FC<AuthContextType> = ({ children }) => {
                 body: JSON.stringify(data),
             });
             if (response.ok) {
-                alert('Data has been successfully posted');
+                toast({
+                    position: 'top',
+                    title: 'Registered successfully',
+                    status: 'success',
+                    duration: 2000,
+                    isClosable: true,
+                });
+                setTimeout(() => handleRouter(), 2000)
             } else {
-                alert('Failed to post data');
+                toast({
+                    position: 'top',
+                    title: 'Failed to register',
+                    status: 'error',
+                    duration: 2000,
+                    isClosable: true,
+                })
             }
         } catch (error) {
             console.log('Error occurred while posting data:', error);
+        } finally {
+            setAuthLoading(false);
+
         }
     }
 
@@ -50,7 +77,8 @@ const AuthProvider: React.FC<AuthContextType> = ({ children }) => {
         session,
         setSession,
         register,
-        login
+        login,
+        authLoading
     };
 
     return (

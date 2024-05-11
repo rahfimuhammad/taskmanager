@@ -38,7 +38,7 @@ const Calculator: React.FC<FormProps> = ({isOpen, onClose}) => {
 
     const buttons = [
         {className: "fun-btn", display: "C", value: "C", id: "erase"},
-        {className: "fun-btn", display: "<-", value: "", id: "clear"},
+        {className: "fun-btn", display: ".", value: ".", id: ""},
         {className: "fun-btn", display: "/", value: "/", id: ""},
         {className: "fun-btn", display: "%", value: "%", id: ""},
         {className: "num-btn", display: "7", value: "7", id: ""},
@@ -53,9 +53,9 @@ const Calculator: React.FC<FormProps> = ({isOpen, onClose}) => {
         {className: "num-btn", display: "2", value: "2", id: ""},
         {className: "num-btn", display: "3", value: "3", id: ""},
         {className: "fun-btn", display: "+", value: "+", id: ""},
-        {className: "num-btn", display: "00", value: "00", id: ""},
+        {className: "num-btn", display: "(", value: "(", id: ""},
         {className: "num-btn", display: "0", value: "0", id: ""},
-        {className: "num-btn", display: ".", value: ".", id: ""},
+        {className: "num-btn", display: ")", value: ")", id: ""},
         {className: "fun-btn", display: "=", value: "=", id: "evaluate"},
     ]
 

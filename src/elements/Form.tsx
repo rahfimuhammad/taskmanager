@@ -3,6 +3,7 @@ import { Checkbox, CheckboxGroup, FormControl, Input, Stack, Textarea } from '@c
 import React, { useState, useEffect } from 'react'
 import ModalElement from './ModalElement'
 import { useTask } from '@/context/TaskProvider'
+import { useSession } from 'next-auth/react'
 
 interface FormProps {
     isOpen: boolean
@@ -13,56 +14,58 @@ interface FormProps {
 const Form: React.FC<FormProps> = ({ task, onClose, isOpen }) => {
 
     const { createTask, updateTask } = useTask()
-    const [data, setData] = useState<any>({
+    const { data }: any = useSession()
+    const userId: string = data?.user?.id || '';
+    const [taskData, setTaskData] = useState<any>({
         id: '',
         title: '',
         description: '',
         createdAt: '',
         status: false,
         important: false,
-        userId: 'ee9eee7c-d084-4dda-910c-34cd6661711a'
+        userId: userId
     });
 
     useEffect(() => {
         if (task) {
-            setData({
+            setTaskData({
                 id: task.id || '',
                 title: task.title || '',
                 description: task.description || '',
                 createdAt: task.createdAt || '',
                 status: task.status || false,
                 important: task.important || false,
-                userId: task.userId || 'ee9eee7c-d084-4dda-910c-34cd6661711a'
+                userId: task.userId || userId
             });
         } else {
-            setData({
+            setTaskData({
                 id: '',
                 title: '',
                 description: '',
                 createdAt: '',
                 status: false,
                 important: false,
-                userId: 'ee9eee7c-d084-4dda-910c-34cd6661711a'
+                userId: userId
             });
         }
-    }, [task]);
+    }, [task, userId]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
         const newValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
-        setData((prevData: any) => ({
+        setTaskData((prevData: any) => ({
             ...prevData,
             [name]: newValue
         }));
     };
 
     const onCreate = async () => {
-        createTask(data)
+        createTask(taskData)
         onClose()
     };
 
     const onEdit = async () => {
-        updateTask(data)
+        updateTask(taskData)
         onClose()
     };
 
@@ -125,19 +128,19 @@ const Form: React.FC<FormProps> = ({ task, onClose, isOpen }) => {
                         }
                     }}
                 />
-                <CheckboxGroup colorScheme='green' defaultValue={[data.important, data.status]}>
+                <CheckboxGroup colorScheme='green' defaultValue={[taskData.important, taskData.status]}>
                     <Stack spacing={[1, 5]} direction='column'>
                     <Checkbox
                         name="important"
                         onChange={handleChange}
-                        isChecked={data.important}
+                        isChecked={taskData.important}
                     >
                         Important
                     </Checkbox>
                     <Checkbox
                         name="status"
                         onChange={handleChange}
-                        isChecked={data.status}
+                        isChecked={taskData.status}
                     >
                         Completed
                     </Checkbox>

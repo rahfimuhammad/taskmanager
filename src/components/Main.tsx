@@ -7,6 +7,7 @@ import PlusCircleOutlined from '@ant-design/icons/PlusCircleOutlined'
 import PlusOutlined from '@ant-design/icons/PlusOutlined'
 import { useTask } from '@/context/TaskProvider'
 import Loading from '@/elements/Loading'
+import { signIn, useSession } from 'next-auth/react'
 
 interface DataItem {
     id: string
@@ -22,12 +23,13 @@ const Main = () => {
     const isSmall = IsSmallScreen()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [taskData, setTaskData] = useState<any>({});
-    const { task, getTasks, loading } = useTask()
+    const { task, getTasks, loading, filter } = useTask()
+    const { data: session } = useSession()
 
     useEffect(() => {
         getTasks()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [filter, session])
 
     const handleModalEdit = (task: any) => {
         onOpen()
@@ -69,9 +71,9 @@ const Main = () => {
                 border='1px solid rgb(136, 136, 136)'
                 bg='#242424'
                 cursor='pointer'
-                onClick={handleModalCreate}
+                onClick={() => signIn()}
             >
-                <PlusOutlined onClick={handleModalCreate} style={{fontSize: '20px', color: 'rgb(136, 136, 136)'}}/>
+                <PlusOutlined style={{fontSize: '20px', color: 'rgb(136, 136, 136)'}}/>
             </Box>
             <Box 
                 w='100%' 
