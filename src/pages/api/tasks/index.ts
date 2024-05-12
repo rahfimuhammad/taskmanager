@@ -47,9 +47,8 @@ export default async function handler(
         }
 
     } else if (req.method === "PATCH") {
+        const data = req.body
         
-        const data = req.body;
-
         try {
             const updatedTask = await updateTask(data);
             res.status(200).json(updatedTask);

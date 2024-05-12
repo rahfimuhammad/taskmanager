@@ -17,7 +17,7 @@ export  default async function handler(
     res: NextApiResponse<Data[] | Data | ErrorResponse>,
 ) {
     if (req.method === "POST") {
-    const { username, email, password } = req.body;
+    const { username, email, password, avatar } = req.body;
 
         try {
             const newUser = await prisma.users.create({
@@ -25,6 +25,7 @@ export  default async function handler(
                     username,
                     email,
                     password,
+                    avatar,
                     },
             });
 

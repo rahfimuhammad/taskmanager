@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
-import Card from '@/elements/Card'
+import { useSession } from 'next-auth/react'
+import { useTask } from '@/context/TaskProvider'
 import { IsSmallScreen } from '@/hooks/useDetectScreen'
+import Card from '@/elements/Card'
 import Form from '@/elements/Form'
 import PlusCircleOutlined from '@ant-design/icons/PlusCircleOutlined'
 import PlusOutlined from '@ant-design/icons/PlusOutlined'
-import { useTask } from '@/context/TaskProvider'
+
 import Loading from '@/elements/Loading'
-import { signIn, useSession } from 'next-auth/react'
 
 interface DataItem {
     id: string
@@ -23,7 +24,7 @@ const Main = () => {
     const isSmall = IsSmallScreen()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [taskData, setTaskData] = useState<any>({});
-    const { task, getTasks, loading, filter } = useTask()
+    const { task, getTasks, loading, filter, title } = useTask()
     const { data: session } = useSession()
 
     useEffect(() => {
@@ -71,7 +72,7 @@ const Main = () => {
                 border='1px solid rgb(136, 136, 136)'
                 bg='#242424'
                 cursor='pointer'
-                onClick={() => signIn()}
+                onClick={handleModalCreate}
             >
                 <PlusOutlined style={{fontSize: '20px', color: 'rgb(136, 136, 136)'}}/>
             </Box>
@@ -87,7 +88,7 @@ const Main = () => {
                 flexDirection='column'
                 gap='5px'
             >
-                <h1>All Tasks</h1>
+                <h1>{title}</h1>
                 <hr style={{width: "60px", border: "2px solid #eef2f6"}}/>
             </Box>
             {loading && <Loading/>}

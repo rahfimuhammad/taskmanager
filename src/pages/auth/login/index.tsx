@@ -1,17 +1,42 @@
-import { IsSmallScreen } from '@/hooks/useDetectScreen'
-import SnippetsFilled from '@ant-design/icons/SnippetsFilled'
-import Head from "next/head";
-import { Box, Button, FormControl, Input, Text } from '@chakra-ui/react'
 import React from 'react'
+import { IsSmallScreen } from '@/hooks/useDetectScreen'
+import { Box, Button, FormControl, FormErrorMessage, FormLabel, Input, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router';
+import { useAuth } from '@/context/AuthProvider';
+import { useFormik } from 'formik';
+import * as yup from 'yup'
+import Head from "next/head";
+import LoadingOutlined from '@ant-design/icons/LoadingOutlined';
+import SnippetsFilled from '@ant-design/icons/SnippetsFilled'
 
 const Login = () => {
 
   const IsSmall = IsSmallScreen()
-  const router  = useRouter()
+  const { push }  = useRouter()
+  const { login, authLoading } = useAuth()
 
+  const handleSubmit = async () => {
+    login(formik.values)
+  }
+
+  const handleChange = (event: any) => {
+    const { target } = event
+    formik.setFieldValue(target.name, target.value)
+  }
+
+  const formik = useFormik({
+    initialValues: {
+        email: "",
+        password: ""
+    },
+    onSubmit: handleSubmit,
+    validationSchema: yup.object().shape({
+        email: yup.string().required().email(),
+        password: yup.string().required().min(6)
+    })
+  })
   const handleRouter = () => {
-    router.push('/auth/register')
+    push('/auth/register')
   }
 
   return (
@@ -63,36 +88,48 @@ const Login = () => {
               <Text fontSize='20px' color='#b8bcc4' fontWeight='bold'>TaskMe</Text>
             </Box>
             <Text fontSize='20px' color='white' fontWeight='bold'>Login</Text>
-            <FormControl
-              w='80%'
-              display='flex'
-              flexDirection='column'
-              gap='10px'
-              color='white'
+            <form 
+                style={{
+                  width: "80%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                  color: "white",
+                }}
+                onSubmit={formik.handleSubmit}
             >
-              <label htmlFor="email">Email</label>
-              <Input
-                name='email'
-                placeholder='johndoe@gmail.com'
-                border='none'
-                bg='#000000'
-                _placeholder={{ opacity: 1, color: '#888' }}
-              />
-              <label htmlFor="password">Password</label>
-              <Input
-                name='password'
-                placeholder='*********'
-                type='password'
-                border='none'
-                bg='#000000'
-                _placeholder={{ opacity: 1, color: '#888' }}
-              />
+              <FormControl isInvalid={formik.errors.email ? true : undefined}>
+                <FormLabel>Email</FormLabel>
+                <Input
+                  onChange={handleChange}
+                  name='email'
+                  placeholder='johndoe@gmail.com'
+                  border='none'
+                  bg='#000000'
+                  _placeholder={{ opacity: 1, color: '#888' }}
+                />
+                <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={formik.errors.password ? true : undefined}>
+                <FormLabel>Password</FormLabel>
+                <Input
+                  onChange={handleChange}
+                  name='password'
+                  placeholder='*********'
+                  type='password'
+                  border='none'
+                  bg='#000000'
+                  _placeholder={{ opacity: 1, color: '#888' }}
+                />
+                <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
+              </FormControl>
               <Button
                   mt='10px'
+                  type='submit'
               >
-                Login
+                {authLoading ? <LoadingOutlined /> : 'Login'}
               </Button>
-            </FormControl>
+            </form>
             <Box>
               <Text>{"Don't have an account? "} 
                 <b onClick={handleRouter} style={{cursor: 'pointer'}}>

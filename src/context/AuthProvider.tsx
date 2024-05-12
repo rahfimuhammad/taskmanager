@@ -1,6 +1,7 @@
 import { useToast } from '@chakra-ui/react';
 import React, { createContext, useContext } from 'react';
 import { useRouter } from 'next/router';
+import { signIn } from 'next-auth/react';
 
 interface AuthContextType {
     session: any;
@@ -26,11 +27,13 @@ const AuthProvider: React.FC<AuthContextType> = ({ children }) => {
     const [session, setSession] =  React.useState([]);
     const [authLoading, setAuthLoading] = React.useState(false);
     const toast = useToast()
-    const router  = useRouter()
+    const { push, query }  = useRouter()
 
     const handleRouter = () => {
-        router.push('/auth/login')
-      }
+        push('/auth/login')
+    }
+    
+    const callbackUrl: any = query?.callbackUrl || '/'
 
     const register = async (data: any) => {
 
@@ -70,7 +73,39 @@ const AuthProvider: React.FC<AuthContextType> = ({ children }) => {
     }
 
     const login = async (data: any) => {
+
+        try {
+            setAuthLoading(true);
+            const response: any = await signIn('credentials', { 
+                ...data, 
+                redirect: false,
+                callbackUrl 
+            })
+    
+        if(!response.error) {
+            push(callbackUrl)
+        } else {
+            toast({
+                position: 'top',
+                title: "Failed to login",
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+    
+        } catch (error: any) {
         
+            toast({
+                position: 'top',
+                title: error.message,
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+            })
+        } finally {
+            setAuthLoading(false);
+        }
     }
 
     const value: AuthContextType = {

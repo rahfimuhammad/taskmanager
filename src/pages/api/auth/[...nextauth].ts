@@ -35,10 +35,12 @@ const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: {
-        jwt({ token, account, profile, user }: any) {
+        jwt({ token, account, user }: any) {
             if(account?.provider === "credentials") {
                 token.email = user.email
                 token.id = user.id
+                token.username = user.username
+                token.avatar = user.avatar
             }
             return token
         },
@@ -49,12 +51,18 @@ const authOptions: NextAuthOptions = {
             if("id" in token) {
                 session.user.id = token.id
             }
+            if("username" in token) {
+                session.user.username = token.username
+            }
+            if("avatar" in token) {
+                session.user.avatar = token.avatar
+            }
             return session
         }
     },
-    // pages: {
-    //     signIn: "/auth/login"
-    // }
+    pages: {
+        signIn: "/auth/login"
+    }
 }
 
 export default NextAuth(authOptions);

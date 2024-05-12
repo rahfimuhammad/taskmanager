@@ -28,6 +28,20 @@ const Sidebar = () => {
     const Modal = tools[activeTool].component
 
     return (
+        <>
+        {isActive && 
+        <Box
+            onClick={() => setIsActive(!isActive)}
+            position='absolute'
+            right='0'
+            top='0'
+            zIndex='1'
+            w='100%'
+            h='100vh'
+            display={isSmall ? 'flex' : 'none'}
+            bg='rgba(0,0,0,0.5)'
+        ></Box>
+        }
         <Box 
             w='260px' 
             h='100vh'
@@ -88,6 +102,7 @@ const Sidebar = () => {
                 onClose={onClose} 
             />
         </Box>
+        </>
     )
 }
 

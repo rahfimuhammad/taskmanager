@@ -13,12 +13,12 @@ interface TabProps {
 const Menu: React.FC<TabProps> = ({ setIsActive }) => {
 
     const [activeTab, setActiveTab] = useState<number>(0);
-    const { setFilter } = useTask()
+    const { setFilter, setTitle } = useTask()
 
     const tabs = [
         {   title: 'All Tasks', 
             icon: HomeFilled,
-            link: '/'
+            filter: ''
         },
         {   title: 'Completed', 
             icon: CheckCircleFilled,
@@ -34,9 +34,10 @@ const Menu: React.FC<TabProps> = ({ setIsActive }) => {
         }
     ]
 
-    const handleTab = (index: number, filter: string) => {
+    const handleTab = (index: number, filter: string, title: string) => {
         setActiveTab(index)
         setFilter(filter)
+        setTitle(title)
         setIsActive(false)
     }
     return (
@@ -47,7 +48,7 @@ const Menu: React.FC<TabProps> = ({ setIsActive }) => {
                         return (
                             <Box
                                 key={index} 
-                                onClick={() => handleTab(index, tab.filter? tab.filter : '')}
+                                onClick={() => handleTab(index, tab.filter, tab.title)}
                                 style={{
                                     width: '100%',
                                     height:'40px',

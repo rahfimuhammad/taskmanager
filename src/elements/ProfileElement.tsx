@@ -1,8 +1,6 @@
 import React from 'react'
-import Profile from '../assets/profile.png'
-import { Box } from '@chakra-ui/react'
-import Image from 'next/image'
 import { signOut, useSession } from 'next-auth/react'
+import { Avatar, Box } from '@chakra-ui/react'
 
 const ProfileElement = () => {
 
@@ -15,10 +13,20 @@ const ProfileElement = () => {
             gap='15px'
             alignItems='center'
             color='white'
+            cursor='pointer'
             onClick={() => signOut()}
         >
-            <Image src={Profile} alt='logo' width={60} height={60} style={{borderRadius: '50%'}}/>
-            <h1 style={{fontSize: '20px', fontWeight: 'bold'}}>{data?.user?.email}</h1>
+            <Avatar 
+                src={data?.user?.avatar}
+                size='md' 
+            />
+            <h1 style={{
+                    maxWidth: '150px', 
+                    fontSize: '20px', 
+                    fontWeight: 'bold'}}
+            >
+                {data?.user?.username}
+            </h1>
         </Box>
     )
 }

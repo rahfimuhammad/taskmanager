@@ -32,8 +32,10 @@ export default function App({
                       throw new Error("Function not implemented.");
                     } } setFilter={function (value: SetStateAction<string>): void {
                       throw new Error("Function not implemented.");
-                    } } filter={''}        
-          >
+                    } } filter={''} title={""} setTitle={function (value: SetStateAction<string>): void {
+                      throw new Error("Function not implemented.");
+                    } }          
+            >
               <Component {...pageProps} />   
             </TaskProvider>
         </AuthProvider>

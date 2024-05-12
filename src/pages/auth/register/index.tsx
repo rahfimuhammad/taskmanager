@@ -1,10 +1,12 @@
-import { IsSmallScreen } from '@/hooks/useDetectScreen'
-import SnippetsFilled from '@ant-design/icons/SnippetsFilled'
-import Head from "next/head";
-import { Box, Button, FormControl, Input, Text } from '@chakra-ui/react'
 import React from 'react'
+import { IsSmallScreen } from '@/hooks/useDetectScreen'
 import { useRouter } from 'next/router';
 import { useAuth } from '@/context/AuthProvider';
+import { Box, Button, FormControl, FormErrorMessage, FormLabel, Input, Text, RadioGroup, Radio, Avatar } from '@chakra-ui/react'
+import { useFormik } from 'formik';
+import * as yup from 'yup'
+import SnippetsFilled from '@ant-design/icons/SnippetsFilled'
+import Head from "next/head";
 import LoadingOutlined from '@ant-design/icons/LoadingOutlined';
 
 const Register = () => {
@@ -12,23 +14,37 @@ const Register = () => {
   const IsSmall = IsSmallScreen()
   const router  = useRouter()
   const { register, authLoading } = useAuth()
-  const [user, setUser] = React.useState({ 
-    username: '', 
-    email: '', 
-    password: '' 
-  })
 
   const handleRouter = () => {
     router.push('/auth/login')
   }
 
-  const handleChange = (e: any) => {
-    setUser({ ...user, [e.target.name]: e.target.value })
+  const handleChange = (event: any) => {
+    const { target } = event
+    formik.setFieldValue(target.name, target.value)
   }
 
   const handleSubmit = () => {
-    register(user)
+    register(formik.values)
   }
+
+  const formik = useFormik({
+    initialValues: {
+        username: "",
+        email: "",
+        password: "",
+        avatar: ""
+    },
+    onSubmit: handleSubmit,
+    validationSchema: yup.object().shape({
+        username: yup.string().required().max(11),
+        email: yup.string().required().email(),
+        password: yup.string().required().min(6),
+        avatar: yup.string().required()
+    })
+  })
+
+
 
   return (
     <>
@@ -79,51 +95,81 @@ const Register = () => {
               <Text fontSize='20px' color='#b8bcc4' fontWeight='bold'>TaskMe</Text>
             </Box>
             <Text fontSize='20px' color='white' fontWeight='bold'>Register</Text>
-            <FormControl
-              w='80%'
-              display='flex'
-              flexDirection='column'
-              gap='10px'
-              color='white'
+            <form
+              style={{
+                    width: "80%",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                    color: "white",
+              }}
+              onSubmit={formik.handleSubmit}
             >
-              <label htmlFor="username">Username</label>
-              <Input
-                name='username'
-                value={user.username}
-                onChange={handleChange}
-                placeholder='johndoe'
-                border='none'
-                bg='#000000'
-                _placeholder={{ opacity: 1, color: '#888' }}
-              />
-              <label htmlFor="email">Email</label>
-              <Input
-                name='email'
-                value={user.email}
-                onChange={handleChange}
-                placeholder='johndoe@gmail.com'
-                border='none'
-                bg='#000000'
-                _placeholder={{ opacity: 1, color: '#888' }}
-              />
-              <label htmlFor="password">Password</label>
-              <Input
-                name='password'
-                value={user.password}
-                onChange={handleChange}
-                placeholder='*********'
-                type='password'
-                border='none'
-                bg='#000000'
-                _placeholder={{ opacity: 1, color: '#888' }}
-              />
+              <FormControl isInvalid={formik.errors.username ? true : undefined}>
+                <FormLabel>Username</FormLabel>
+                <Input
+                    name='username'
+                    onChange={handleChange}
+                    placeholder='johndoe'
+                    border='none'
+                    bg='#000000'
+                    _placeholder={{ opacity: 1, color: '#888' }}
+                />
+              <FormErrorMessage>{formik.errors.username}</FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={formik.errors.email ? true : undefined}>
+                <FormLabel>Email</FormLabel>
+                <Input
+                  name='email'
+                  onChange={handleChange}
+                  placeholder='johndoe@gmail.com'
+                  border='none'
+                  bg='#000000'
+                  _placeholder={{ opacity: 1, color: '#888' }}
+                />
+                <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={formik.errors.password ? true : undefined}>
+                <FormLabel>Password</FormLabel>
+                <Input
+                  name='password'
+                  onChange={handleChange}
+                  placeholder='*********'
+                  type='password'
+                  border='none'
+                  bg='#000000'
+                  _placeholder={{ opacity: 1, color: '#888' }}
+                />
+                <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
+              </FormControl>
+              <FormControl>
+                <FormLabel>Choose Avatar</FormLabel>
+                <RadioGroup display='flex' gap='10px' name="avatar" defaultValue='1' value={formik.values.avatar} onChange={(value) => formik.setFieldValue('avatar', value)}>
+                  <label>
+                    <Radio display='none' value="/assets/firstman.png"></Radio>
+                    <Avatar src="/assets/firstman.png" size='sm' />
+                  </label>
+                  <label>
+                    <Radio display='none' value="/assets/secondman.png"></Radio>
+                    <Avatar src="/assets/secondman.png" size='sm' />
+                  </label>
+                  <label>
+                    <Radio display='none' value="/assets/firstwoman.png"></Radio>
+                    <Avatar src="/assets/firstwoman.png" size='sm' />
+                  </label>
+                  <label>
+                    <Radio display='none' value="/assets/secondwoman.png"></Radio>
+                    <Avatar src="/assets/secondwoman.png" size='sm' />
+                  </label>
+                </RadioGroup>
+              </FormControl>
               <Button
                   mt='10px'
                   onClick={handleSubmit}
               >
                 {authLoading ? <LoadingOutlined /> : 'Register' }
               </Button>
-            </FormControl>
+            </form>
             <Box>
               <Text>{"Already have an account? "} 
                 <b onClick={handleRouter} style={{cursor: 'pointer'}}>

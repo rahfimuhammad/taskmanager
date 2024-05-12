@@ -8,6 +8,8 @@ interface TaskContextType {
     filter: string | ''
     setFilter: React.Dispatch<React.SetStateAction<string>>
     loading: boolean;
+    title: string
+    setTitle: React.Dispatch<React.SetStateAction<string>>
     getTasks: () => void
     createTask: (data: any) => void
     updateTask: (data: any) => void
@@ -30,6 +32,7 @@ const TaskProvider: React.FC<TaskContextType> = ({ children }) => {
     const [task, setTask] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
     const [filter, setFilter] = React.useState('');
+    const [title, setTitle] = React.useState('All Tasks');
     const toast = useToast()
     const { data }: any = useSession()
     const userId = data?.user?.id
@@ -38,7 +41,6 @@ const TaskProvider: React.FC<TaskContextType> = ({ children }) => {
 
         try {
             setLoading(true)
-            console.log('test', data)
             fetch(`/api/tasks?userId=${userId}&filter=${filter}`)
                 .then((res) => res.json())
                 .then((data) => 
@@ -161,7 +163,9 @@ const TaskProvider: React.FC<TaskContextType> = ({ children }) => {
         updateTask,
         deleteTask,
         setFilter,
-        filter
+        filter,
+        title,
+        setTitle
     };
 
     return (
