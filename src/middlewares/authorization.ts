@@ -13,7 +13,7 @@ export default function authorization(middleware: NextMiddleware, requireAuth: s
             })
 
             if(!token) {
-                const url = new URL("/api/auth/signin", req.url)
+                const url = new URL("/auth/login", req.url)
                 return NextResponse.redirect(url)
             }
         }
